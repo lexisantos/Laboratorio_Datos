@@ -1,4 +1,4 @@
-### Lista de funciones y métodos vistos
+### Funciones vistas por clase
 #### Clase 1. Numpy y Pandas.
 
 Sobre vectores:
@@ -14,9 +14,7 @@ A@B
 B.T@A.T
 ```
 
-Funciones y métodos:
-
-Aparte de las de agregación (*sum, mean, min, max*), tenemos:
+Aparte de las funciones de agregación (*sum, mean, min, max*), tenemos:
 
 ```
 np.float64()
