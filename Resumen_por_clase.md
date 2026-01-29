@@ -1,5 +1,5 @@
 ### Funciones vistas por clase
-#### Clase 1. Numpy y Pandas.
+#### Clase 1. Numpy.
 
 Sobre vectores:
 
@@ -25,3 +25,32 @@ np.sort()
 np.all()
 np.random.choice(x, size:int, replace:bool)
 ```
+
+#### Clase 2. Pandas.
+
+En Series:
+```
+s = pd.Series()
+s.values
+s.index #Default: de 0 a N-1
+s.iloc[] #por posición o rango de posiciones
+s.loc[] #por etiquetas (index) o rango de et.
+s[[index1, index6]] #seleccionar elementos mediante lista de index
+s.isin([listofvalues]) #returns Serie de booleanos
+s.value_counts() #Cuenta values repetidos
+```
+
+Con DataFrames:
+
+
+
+
+
+
+
+
+
+
+
+
+
