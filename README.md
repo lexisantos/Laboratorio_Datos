@@ -1,4 +1,4 @@
-### Tablas y sets de datos
+## Tablas y sets de datos
 
 * **gapminder**: datos poblacionales y de desarrollo humano mundial.
 * **casos_coronavirus.csv**: casos nuevos confirmados en Argentina por fecha.
@@ -6,8 +6,8 @@
 * **tips**: dataset en *seaborn*. Propinas en restaurantes en función de datos de clientes.
 * **penguins**: dataset en *seaborn*. Información de pingüinos.
 
-### Funciones vistas por clase
-#### Clase 1. Numpy.
+## Funciones vistas por clase
+### Clase 1. Numpy.
 
 Sobre vectores:
 
@@ -34,9 +34,9 @@ np.all()
 np.random.choice(x, size:int, replace:bool)
 ```
 
-#### Clase 2. Pandas.
+### Clase 2. Pandas.
 
-En Series (como un array de Numpy, pero indexado):
+En **Series** (como un array de Numpy, pero indexado):
 ```
 s = pd.Series()
 s.values
@@ -51,7 +51,7 @@ s.value_counts() #Cuenta values repetidos
 ```
 Además de las funciones de agregación y estadística *min, max, median, mean, var, std* (~Numpy)
 
-Con DataFrames:
+Con **DataFrames**:
 ```
 df = pd.DataFrame(dict)
 df.head()
@@ -80,9 +80,9 @@ df[[col1, col2]].drop_duplicates().col1.value_counts(normalize = True) #valores 
 
 ```
 
-#### Clase 3. Visualización con Seaborn.
+### Clase 3. Visualización con Seaborn.
 
-<img width="1514" height="890" alt="imagen" src="https://github.com/user-attachments/assets/0188e5dc-d7ad-4e0f-848d-be41dc108c87" />
+<img width="500" height="300" alt="imagen" src="https://github.com/user-attachments/assets/0188e5dc-d7ad-4e0f-848d-be41dc108c87" />
 
 ```
 (
@@ -117,7 +117,7 @@ filtered_column: DataFrame[filter].column2
 
 ```
 
-Histograma:
+**Histograma**:
 
 Si ```s``` corresponde a una Serie con los datos agrupados por categoría.
 
@@ -138,7 +138,7 @@ Pero podría ser un DataFrame, y hace las cuentas según ```column1```:
 )
 ```
 
-BoxPlots:
+**BoxPlots**:
 Cálculo de cuartiles en una Serie *s*: ```s.quantile(.25, interpolation = "midpoint") #o 0.50 o 0.75```
 
 
@@ -151,7 +151,13 @@ plt.show()
 
 ```
 
-Subplots:
+Para clasificar por colores según columna:
+```
+sns.boxplot(data = df, x="column1 or index", y = "column2", hue = "column3")
+plt.show()
+```
+
+**Subplots**:
 ```
 fig, ax =plt.subplots(1,2)  #Grilla de dos gráficos.
 #fig.set_figwidth(12)
@@ -168,9 +174,67 @@ plt.show()
 
 ```
 
-Para clasificar por colores según columna:
+### Clase 4. Regresión Lineal
+Puede hacerse usando *Polyfit* de Seaborn:
+
 ```
-sns.boxplot(data = df, x="column1 or index", y = "column2", hue = "column3")
-plt.show()
+(
+    so.Plot(data = df, x, y)
+    .add(so.Dot())
+    .add(so.Line(color, linewidth), so.Polyfit(1), label = 'Label')
+    .label(title, x, y)
+)
 ```
+
+Los estimadores de los parámetros de ajuste se pueden calcular como
+
+
+<img width="206" height="140" alt="image" src="https://github.com/user-attachments/assets/744f7233-a01e-42fa-9843-8d369dc74232" />
+
+
+```
+b1_est = ((x-x.mean())*(y-y.mean())).sum()/(((x-x.mean())**2).sum())
+b0_est = y.mean() - b1_est*x.mean()
+```
+
+Una forma más rápida de calcularlas, y de a su vez obtener las métricas, es usando la biblioteca *scikit-learn*.
+
+```
+from sklearn import linear_model #modelos lineales
+from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error
+
+model = linear_model.LinearRegression()
+model.fit(X, y) #X debe ser matriz o DataFrame. X = df[["column"]] | Pueden calcularse varias relaciones lineales respecto a una misma tira de datos 'y'
+
+print("Coeficientes (b1's): ", modelo.coef_) #pendientes | list[float]
+print("Intercept (b0): ", modelo.intercept_) #ord. al origen
+
+vars(model) #todas las variables definidas luego del ajuste.
+```
+
+Para usar estos valores en la función y predecir nuevos resultados:
+
+```
+model.predict(df_nuevo)
+
+#o usar los datos en x para saber cómo predice lo conocido/medido:
+
+y_pred = model.predict(X) #ajuste lineal sobre datos
+```
+
+Cálculo de **R²**:
+```
+model.score(X, y)
+
+#o también
+
+r2_score(y, y_pred)
+```
+
+**Error cuadrático medio**:
+```
+mean_squared_error(y, y_pred)
+root_mean_squared_error(y, y_pred)
+```
+
 
