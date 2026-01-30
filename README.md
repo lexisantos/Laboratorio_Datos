@@ -117,9 +117,60 @@ filtered_column: DataFrame[filter].column2
 
 ```
 
+Histograma:
+
+Si ```s``` corresponde a una Serie con los datos agrupados por categoría.
+
+```
+(
+    so.Plot(x = s.index, y = s.values)
+    .add(so.Bar())
+)
+```
+
+Pero podría ser un DataFrame, y hace las cuentas según ```column1```:
+
+```
+(
+    so.Plot(data = df, x = "column1")
+    .add(so.Bar(), so.Hist()) #so.Hist(bins = ??), so.Bars() si no quiero que haya tanto espacio entre columnas
+    .label(x = "xLabel", y = "yLabel")
+)
+```
+
+BoxPlots:
+Cálculo de cuartiles en una Serie *s*: ```s.quantile(.25, interpolation = "midpoint") #o 0.50 o 0.75```
 
 
+```
+s.name = "ColumnName"
+(
+    sns.boxplot(x = s)
+)
+plt.show()
 
+```
 
+Subplots:
+```
+fig, ax =plt.subplots(1,2)  #Grilla de dos gráficos.
+#fig.set_figwidth(12)
 
+#Histograma vs boxplot
+(
+    so.Plot(data = df, x = "column")
+    .add(so.Bars(), so.Hist())
+    .on(ax[0]).plot()  # Primera casilla de la grilla.
+)
+
+sns.boxplot(df, x="column", ax = ax[1])    #Segunda casilla de la grilla.
+plt.show()
+
+```
+
+Para clasificar por colores según columna:
+```
+sns.boxplot(data = df, x="column1 or index", y = "column2", hue = "column3")
+plt.show()
+```
 
