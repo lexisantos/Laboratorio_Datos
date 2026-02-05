@@ -1,10 +1,14 @@
 ## Tablas y sets de datos
 
+Propios de Seaborn:
 * **gapminder**: datos poblacionales y de desarrollo humano mundial.
-* **casos_coronavirus.csv**: casos nuevos confirmados en Argentina por fecha.
 * **dowjones**: dataset en *seaborn* (```sns.load_dataset("dowjones")```). Datos de índice Dow Jones de las bolsas de Estados Unidos.
 * **tips**: dataset en *seaborn*. Propinas en restaurantes en función de datos de clientes.
 * **penguins**: dataset en *seaborn*. Información de pingüinos.
+
+Tablas externas:
+* **casos_coronavirus.csv**: casos nuevos confirmados en Argentina por fecha.
+* **Sleep_Efficiency_Cleaning.csv**: base descargada de kaggle.com, con modificaciones para el curso. Información sobre los hábitos de sueño de distintas personas.
 
 ## Funciones vistas por clase
 ### Clase 1. Numpy.
@@ -304,3 +308,68 @@ Esta consulta devuelve un DataFrame con la tabla filtrada.
 
 
 ### Clase 7. Limpieza de datos.
+
+**Renombrar variables de columnas** 
+
+* Usando diccionarios:
+
+```
+#Redefino las columnas que quiero cambiar. Por ejemplo:
+
+nombres = {
+  "Age": "Edad",
+  "Gender": "Género",
+  "Bedtime": "Hora dormir",
+  "Wakeup time": "Hora despertar"
+}
+
+df = df.rename(columns= nombres)
+```
+
+* Con funciones:
+
+```
+df.rename(columns = str.upper) #pasar a mayús todas
+
+```
+
+**Eliminar valores faltantes**
+
+Para borrar columnas/filas:
+
+```
+# Ver cantidad de datos faltantes por fila.
+df.isna().sum() #o .isnull()
+
+#Podemos eliminar las filas con NaN
+df.dropna()
+
+#o las columnas que contienen datos vacíos (cant. de participantes se mantiene)
+df.dropna(axis = "columns")
+
+#o hacer una combinación: elimino columnas con muuuchos datos faltantes, y luego filas con datos perdidos.
+
+df.drop(columns = ["col1", "col2"], inplace = True)
+df.dropna(inplace = True)
+```
+
+Si se quiere imputar datos faltantes:
+```
+df.fillna(0) #con 0 (si no corresponde), valor medio (dato perdido, afecta lo menos posible al modelo)
+```
+
+**Eliminar datos duplicados**
+
+```
+df.duplicated().sum() #Ver por columna
+df.drop_duplicates()
+
+#Si queremos que se quede con el último:
+#df.drop_duplicates(keep = "last")
+
+#Si además buscamos en una columna específica (por ej., ID es llave, deberían ser valores únicos)
+#df.drop_duplicates(subset = "ID", keep = "last")
+```
+
+**Resetear el index**
+Si se eliminan filas, los index no se modifican, quedan igual que antes. 
