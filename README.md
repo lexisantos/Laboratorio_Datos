@@ -174,7 +174,7 @@ plt.show()
 
 ```
 
-### Clase 4. Regresión Lineal
+### Clase 4. Regresión Lineal.
 Puede hacerse usando *Polyfit* de Seaborn:
 
 ```
@@ -234,7 +234,73 @@ r2_score(y, y_pred)
 **Error cuadrático medio**:
 ```
 mean_squared_error(y, y_pred)
+
+
+
 root_mean_squared_error(y, y_pred)
 ```
 
+### Clase 5. Cuadrados mínimos.
 
+Usamos *Formulaic* para crear la matriz X. Si queremos 
+
+```
+from formulaic import Formula
+
+Formula('y ~ poly(x, 3, raw=True) - 1').get_model_matrix(df_data)
+
+#-1 quiere decir que no se considera el intercept (no hay col de 1's).
+```
+
+Si queremos modelar una oscilación con deriva lineal en función del mes:
+
+```
+mes = np.arange(521)
+X = pd.DataFrame(
+    {
+        "mes": mes,
+        "mes2": mes**2,
+        #"mes3": mes**3,
+        "sinx": np.sin(2*np.pi*mes/12),
+        "cosx": np.cos(2*np.pi*mes/12)
+        #"sin13x": np.sin(2*np.pi*mes/13),
+        #"cos13x": np.cos(2*np.pi*mes/13)
+    },
+    index=df.index
+)
+```
+<img width="360" height="267" alt="image" src="https://github.com/user-attachments/assets/644442fe-d983-44ae-bd0e-740cc994bf43" />
+
+<img width="360" height="267" alt="image" src="https://github.com/user-attachments/assets/82334b4b-5f0e-4e99-a484-91ee29a2e284" />
+
+### Clase 6. Introducción a SQL con SQLite.
+
+```
+import sqlite3
+con = sqlite3.connect(":memory:") #Crear conexión a base de datos en la memoria RAM
+```
+
+Para pasar un DataFrame *df* a SQL (ineficiente si se quiere volver a DataFrame)
+
+```
+df.to_sql("sql-table-name", con, index=False, if_exists="replace")
+```
+
+Las consultas se hacen usando Pandas. Revisar [este repositorio](https://github.com/lexisantos/SQLforDataScience) con apuntes del curso de SQL. Un ejemplo genérico:
+
+```
+pd.read_sql_query("""
+SELECT
+    column1,
+    column2,
+    SUM(column3) AS alias_agg
+FROM sql-table-name
+WHERE condition
+GROUP BY any column
+""", con) #elegir la conexión donde se encuentra la tabla.
+```
+
+Esta consulta devuelve un DataFrame con la tabla filtrada.
+
+
+### Clase 7. Limpieza de datos.
