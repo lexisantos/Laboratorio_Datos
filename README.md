@@ -9,6 +9,8 @@ Propios de Seaborn:
 Tablas externas:
 * **casos_coronavirus.csv**: casos nuevos confirmados en Argentina por fecha.
 * **Sleep_Efficiency_Cleaning.csv**: base descargada de kaggle.com, con modificaciones para el curso. Información sobre los hábitos de sueño de distintas personas.
+* **nutricion.csv**: Calorías de alimentos en función de los nutrientes/componentes.
+* **infeccion_hospitales**: Datos de infecciones en hospitales (id_hospital, días, edad, riesgo, estudios, RayosX, Camas, Afiliado, Región, Pacientes, Enfermeros)
 
 ## Funciones vistas por clase
 ### Clase 1. Numpy.
@@ -373,3 +375,121 @@ df.drop_duplicates()
 
 **Resetear el index**
 Si se eliminan filas, los index no se modifican, quedan igual que antes. 
+
+### Clase 9. Modelo Lineal Multivariado.
+
+Se determina el modelo lineal como
+
+$$
+y \sim X \vec{\beta} = \beta_0 + \sum_i \beta_i\cdot x_i
+$$
+
+donde las $x_i$ son las variables de los datos a ajustar.
+
+Para escribir la fórmula y definir la matriz a partir del DataFrame de entrenamiento *df_train*, usamos *formulaic*.
+
+'''
+import formulaic
+
+y, X = (
+    Formula('data_y ~ x_1 + x_2 + ...  - 1')
+    .get_model_matrix(df_train) # -1 porque el modelo no tiene ordenada al origen (beta 0)
+)
+'''
+
+Dentro de Formula podemos establecer la relación entre las distintas variables. X va a retornarse con estas modificaciones.
+
+Para entrenar al modelo con datos usamos la biblioteca *scikit learn*.
+
+'''
+from sklearn import linear_model    # Herramientas de modelos lineales
+from sklearn.metrics import mean_squared_error, r2_score    # Medidas de desempeño
+
+modelo = linear_model.LinearRegression() #intercept = True por default | Calcula una ordenada
+modelo.fit(X, y)
+'''
+
+La bondad del ajuste se evalúa a partir del RMSE (Root Mean Square Error), usando el DataFrame de los datos con los que se va a testear, *df_test*:
+
+'''
+y_test, X_test = (
+    Formula('data_y ~ x_1 + x_2 + ...  - 1')
+    .get_model_matrix(df_test)
+)
+
+y_pred = modelo.predict(X_test)
+# Calculando el R^2
+r2 = r2_score(y_test, y_pred)
+print('R^2: ', r2)
+
+# Calculando el ECM
+ecm = mean_squared_error(y_test, y_pred)
+print('Raiz cuadarada del ECM: ', np.sqrt(ecm))
+'''
+
+Para visualizar los coeficiente y el intercept:
+'''
+modelo.intercept_
+modelo.coef_
+'''
+
+
+Es posible visualizar la correlación lineal entre las distintas variables en forma de gráficos $y \sim x_i$ a partir de Seaborn.
+
+'''
+sns.pairplot(df)
+'''
+
+### Clase 10. Preprocesamiento.
+
+**Escalamiento MinMax**
+
+Hacer una transformación lineal del tipo $x_{\text{nuevo}} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}$, por lo que $x \in [0, 1]$
+
+'''
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler().set_output(transform = "pandas") #output DataFrame
+'''
+
+Calcular los coeficientes de la transformación (*fit*) y aplicarlas (*transform*):
+
+'''
+scaler.fit_transform(X)
+'''
+
+*Desventaja: Sensible ante outliers.*
+
+**Escalamiento X($\mu = 0, \sigma = 1)$)**
+
+'''
+from sklearn.preprocessing import StandardScaler
+
+#la definición del scaler y el fit_transform es análoga a MinMax()
+'''
+
+**Variables Binarias**
+
+En caso de tener en cuenta una variable ($x_i$) con dos valores (i.e., valor1/valor2 o Si/No), al definir el modelo con intercept devuelve una nueva columna $x_i.valor1$ con 1's y 0's.
+
+**Variables Categóricas**
+
+Formulaic va a sumar columnas con 1's y 0's por categoría en cada variable nominal. Si se tienen N categorias, se sumará N-1 columnas por variable.
+
+*Disclaimer: Puede que agregar más variables categóricas no aporte mucho en el fiteo. Tanto el R2 así como el ECM pueden no variar significativamente.*
+
+### Clase 11. Web Scrapping.
+
+Para realizar solicitudes a un servidor web. Es posible que pida credenciales para ingresar, se ingresan a través de *params*
+
+'''
+import requests
+from bs4 import Beautiful Soap
+
+data_get = requests.get(url, params = credenciales) #.json() si se quiere exportar en este formato 
+data_get.status_code #200 quiere decir que está todo OK
+'''
+
+**Beautiful Soup**
+
+
+
