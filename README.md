@@ -411,7 +411,7 @@ modelo.fit(X, y)
 
 La bondad del ajuste se evalúa a partir del RMSE (Root Mean Square Error), usando el DataFrame de los datos con los que se va a testear, *df_test*:
 
-´´´
+```
 y_test, X_test = (
     Formula('data_y ~ x_1 + x_2 + ...  - 1')
     .get_model_matrix(df_test)
@@ -425,7 +425,7 @@ print('R^2: ', r2)
 # Calculando el ECM
 ecm = mean_squared_error(y_test, y_pred)
 print('Raiz cuadarada del ECM: ', np.sqrt(ecm))
-´´´
+```
 
 Para visualizar los coeficiente y el intercept:
 ```
@@ -475,7 +475,7 @@ En caso de tener en cuenta una variable ($x_i$) con dos valores (i.e., valor1/va
 
 Formulaic va a sumar columnas con 1's y 0's por categoría en cada variable nominal. Si se tienen N categorias, se sumará N-1 columnas por variable.
 
-*Disclaimer: Puede que agregar más variables categóricas no aporte mucho en el fiteo. Tanto el R2 así como el ECM pueden no variar significativamente.*
+*Disclaimer: Puede que agregar más variables categóricas no aporte mucho en el ajuste. Tanto el R2 así como el ECM pueden no variar significativamente.*
 
 ### Clase 11. Web Scrapping.
 
