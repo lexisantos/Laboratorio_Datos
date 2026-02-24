@@ -436,7 +436,7 @@ modelo.coef_
 
 Es posible visualizar la correlación lineal entre las distintas variables en forma de gráficos $y \sim x_i$ a partir de Seaborn.
 
-
+```
 sns.pairplot(df)
 ```
 
